@@ -689,18 +689,64 @@ def run_task_generate():
 
             f.recreate_dir(gen_out_dir)
 
+            # output_file = os.path.join(
+            #     gen_out_dir,
+            #     "pdfium.js",
+            # )
+
             output_file = os.path.join(
                 gen_out_dir,
-                "pdfium.js",
+                "pdfium.mjs",
             )
 
+            # command = [
+            #     "em++",
+            #     "{0}".format("-g" if config == "debug" else "-O2"),
+            #     "-o",
+            #     output_file,
+            #     "-s",
+            #     'EXPORTED_FUNCTIONS="$(node function-names ../xml/index.xml)"',
+            #     "-s",
+            #     'EXPORTED_RUNTIME_METHODS=\'["ccall", "cwrap", "wasmExports"]\'',
+            #     "custom.cpp",
+            #     lib_file_out,
+            #     "-I{0}".format(include_dir),
+            #     "-s",
+            #     "DEMANGLE_SUPPORT=1",
+            #     "-s",
+            #     "USE_ZLIB=1",
+            #     "-s",
+            #     "USE_LIBJPEG=1",
+            #     "-s",
+            #     "WASM=1",
+            #     "-s",
+            #     "ASSERTIONS=1",
+            #     "-s",
+            #     "ALLOW_MEMORY_GROWTH=1",
+            #     "-sMODULARIZE",
+            #     "-sEXPORT_NAME=PDFiumModule",
+            #     "-std=c++11",
+            #     "-Wall",
+            #     "--no-entry",
+            # ]
             command = [
                 "em++",
                 "{0}".format("-g" if config == "debug" else "-O2"),
+                "-lembind",
+                # "--clear-cache",
                 "-o",
                 output_file,
+                "--embind-emit-tsd",
+                os.path.join(
+                    gen_out_dir,
+                    "pdfium.d.ts",
+                ),
                 "-s",
-                'EXPORTED_FUNCTIONS="$(node function-names ../xml/index.xml)"',
+                'EXPORTED_FUNCTIONS="$(node function-names ../xml/index.xml __getTypeName)"',
+                "-s",
+                'EXPORT_ES6=1',
+                "-s",
+                'ENVIRONMENT=worker',
                 "-s",
                 'EXPORTED_RUNTIME_METHODS=\'["ccall", "cwrap", "wasmExports"]\'',
                 "custom.cpp",

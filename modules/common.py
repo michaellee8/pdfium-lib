@@ -63,7 +63,8 @@ def run_task_build_emsdk():
     r.run(command, cwd=cwd, shell=True)
 
     cwd = tools_dir
-    command = " ".join(["source", "emsdk_env.sh"])
+    print("cwd", cwd)
+    command = " ".join(["source", "./emsdk_env.sh"])
     r.run(command, cwd=cwd, shell=True)
 
     l.ok()
